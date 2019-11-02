@@ -1,0 +1,212 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Billingo plugin for Craft Commerce
+ *
+ * Billingo for Craft Commerce Settings.twig
+ *
+ * @author    Ottó Radics
+ * @copyright Copyright (c) 2019 Ottó Radics
+ * @link      https://www.webmenedzser.hu
+ * @package   Billingo
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+    label: 'Plugin Name',
+    instructions: 'Override plugin name.',
+    id: 'pluginName',
+    name: 'pluginName',
+    required: false,
+    placeholder: 'Billingo',
+    value: settings['pluginName'] ?? null
+}) }}
+
+{{ forms.textField({
+    label: 'Public API Key',
+    instructions: 'Enter Billingo public API key here.',
+    id: 'publicApiKey',
+    name: 'publicApiKey',
+    required: true,
+    value: settings['publicApiKey'] ?? null
+}) }}
+
+{{ forms.textField({
+    label: 'Private API Key',
+    instructions: 'Enter Billingo private API key here.',
+    id: 'privateApiKey',
+    name: 'privateApiKey',
+    required: true,
+    value: settings['privateApiKey'] ?? null
+}) }}
+
+{% set invoiceTypeOptions = {
+    '1': 'Proforma Invoice' | t('billingo'),
+    '3': 'Normal Invoice' | t('billingo')
+} %}
+
+{{ forms.selectField({
+    label: 'Invoice Type',
+    instructions: 'Select an invoice type you want to create once the order is marked as Paid.',
+    id: 'invoiceType',
+    name: 'invoiceType',
+    required: true,
+    value: settings['invoiceType'] ?? null,
+    options: invoiceTypeOptions
+}) }}
+
+{% set templateLanguages = {
+    'hu': 'Hungarian' | t,
+    'en': 'English' | t,
+    'de': 'German' | t,
+    'fr': 'French' | t,
+    'hr': 'Croatian' | t,
+    'it': 'Italian' | t,
+    'ro': 'Romanian' | t,
+    'sk': 'Slovak' | t
+} %}
+
+{{ forms.selectField({
+    label: 'Invoice Language',
+    instructions: 'Select language used for invoice templates here.',
+    id: 'templateLangCode',
+    name: 'templateLangCode',
+    required: true,
+    value: settings['templateLangCode'] ?? null,
+    options: templateLanguages
+}) }}
+
+{% set electronicInvoiceOptions = {
+    '1': 'Yes' | t,
+    '0': 'No' | t
+} %}
+
+{{ forms.selectField({
+    label: 'Electronic Invoices',
+    id: 'electronicInvoice',
+    name: 'electronicInvoice',
+    required: true,
+    value: settings['electronicInvoice'] ?? null,
+    options: electronicInvoiceOptions
+}) }}
+
+{% set emailTriggerOptions = {
+    1: 'Yes' | t,
+    0: 'No' | t
+} %}
+
+{{ forms.selectField({
+    label: 'Trigger E-mails?',
+    instructions: 'Set this to Yes if you want Commerce to trigger e-mail sending in Billingo.',
+    id: 'triggerEmails',
+    name: 'triggerEmails',
+    required: true,
+    value: settings['triggerEmails'] ?? null,
+    options: emailTriggerOptions
+}) }}
+
+{% set vatOptions = {
+    '1': '27%',
+    '2': '5%',
+    '3': '18%',
+    '4': '0%',
+} %}
+
+{{ forms.selectField({
+    label: 'Default VAT',
+    instructions: 'This is the default VAT used in your store.',
+    id: 'defaultVat',
+    name: 'defaultVat',
+    required: true,
+    value: settings['defaultVat'] ?? null,
+    options: vatOptions
+}) }}
+
+{% set roundToOptions = {
+    '0': '0',
+    '1': '1',
+    '5': '5',
+    '10': '10',
+} %}
+
+{{ forms.selectField({
+    label: 'Round To',
+    instructions: 'Optional, defaults to 0 (no rounding).',
+    id: 'roundTo',
+    name: 'roundTo',
+    required: true,
+    value: settings['roundTo'] ?? null,
+    options: roundToOptions
+}) }}
+
+{{ forms.textField({
+    label: 'Block UID',
+    instructions: 'Enter the block UID to the invoice block ID you want to create invoice in.',
+    id: 'blockUid',
+    name: 'blockUid',
+    required: true,
+    value: settings['blockUid'] ?? null
+}) }}
+
+{{ forms.textField({
+    label: 'Unit Type',
+    instructions: 'Unit type for sold items. Set it to anything (pieces, puppies, etc.) you want.',
+    id: 'unitType',
+    name: 'unitType',
+    required: true,
+    value: settings['unitType'] ?? null
+}) }}
+
+{% set allVolumes = craft.app.volumes.getAllVolumes() %}
+{% set assetVolumeList = [
+    {
+        'value': '',
+        'label': '---'
+    }
+] %}
+{% for volume in allVolumes %}
+    {% set assetVolumeList = assetVolumeList|merge([{'value': volume.id, 'label': volume.name}]) %}
+{% endfor %}
+
+{% macro assetLocationInput(volumeOptions, volumeUid, subpath) %}
+    {% from "_includes/forms" import select, text %}
+    <div class="flex">
+        <div>
+            {{ select({
+                id: 'invoiceAssetVolume',
+                name: 'invoiceAssetVolume',
+                options: volumeOptions,
+                value: volumeUid,
+            }) }}
+        </div>
+        <!--
+        <div class="flex-grow">
+            {{ text({
+                id: 'invoiceAssetSubpath',
+                class: 'ltr',
+                name: 'invoiceAssetSubpath',
+                value: subpath,
+                placeholder: "path/to/subfolder"|t('app')
+            }) }}
+        </div>
+        -->
+    </div>
+{% endmacro %}
+
+{% from _self import assetLocationInput %}
+
+{% if assetVolumeList %}
+    {{ forms.field({
+        first: true,
+        label: "Invoice Volume" | t('billingo'),
+        instructions: "Where do you want to store Invoices? Note that the subfolder path can contain variables like <code>{postDate}</code>." | t('billingo')
+    }, assetLocationInput(assetVolumeList, settings['invoiceAssetVolume'], settings['invoiceAssetSubpath'])) }}
+{% else %}
+    {{ forms.field({
+        first: true,
+        label: "Invoice Volume" | t('billingo')
+    }, '<p class="error">' ~ "No volumes exist yet." | t('app') ~ '</p>') }}
+{% endif %}

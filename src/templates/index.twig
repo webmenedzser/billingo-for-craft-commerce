@@ -1,0 +1,9 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+
+{% extends "_layouts/elementindex" %}
+
+{% set title = "Invoices" %}
+{% set docTitle = title ~ ' - ' ~ 'Billingo' %}
+{% set elementType = 'webmenedzser\\billingo\\elements\\InvoicesElements' %}
+{% set bodyClass = (bodyClass is defined ? bodyClass~' ' : '') ~ "billingoinvoices billingoinvoicesindex" %}
+
