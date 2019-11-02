@@ -43,7 +43,6 @@ class AssetDownloader extends Component
         $this->invoiceAssetSubpath = Billingo::getInstance()->getSettings()->invoiceAssetSubpath;
 
         $this->downloadFile();
-        $this->assetId = $this->saveAsset()->id;
     }
 
     public function downloadFile()
@@ -91,6 +90,8 @@ class AssetDownloader extends Component
         if ($result === false) {
             throw new \Exception('Error while creating Asset.');
         }
+
+        $this->assetId = $asset->id;
 
         return $asset;
     }
