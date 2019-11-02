@@ -40,6 +40,8 @@ This plugin will connect Craft Commerce with Billingo: whenever an Order is paid
     - Block ID
     - Unit Type string
     - Invoice Volume
+    - **NEW!** Map your Craft Commerce gateways to Billingo Payment Methods.
+    - **NEW!** Override some of your default settings (Due Days & Invoice Type) for your payment gateways. 
 - Support for Project Config
 
 ## Configuring Billingo for Craft Commerce
