@@ -16,8 +16,8 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.textField({
-    label: 'Plugin Name',
-    instructions: 'Override plugin name.',
+    label: 'Plugin Name' | t('billingo'),
+    instructions: 'Override plugin name.' | t('billingo'),
     id: 'pluginName',
     name: 'pluginName',
     required: false,
@@ -26,8 +26,8 @@
 }) }}
 
 {{ forms.textField({
-    label: 'Public API Key',
-    instructions: 'Enter Billingo public API key here.',
+    label: 'Public API Key' | t('billingo'),
+    instructions: 'Enter Billingo public API key here.' | t('billingo'),
     id: 'publicApiKey',
     name: 'publicApiKey',
     required: true,
@@ -35,8 +35,8 @@
 }) }}
 
 {{ forms.textField({
-    label: 'Private API Key',
-    instructions: 'Enter Billingo private API key here.',
+    label: 'Private API Key' | t('billingo'),
+    instructions: 'Enter Billingo private API key here.' | t('billingo'),
     id: 'privateApiKey',
     name: 'privateApiKey',
     required: true,
@@ -49,13 +49,37 @@
 } %}
 
 {{ forms.selectField({
-    label: 'Invoice Type',
-    instructions: 'Select an invoice type you want to create once the order is marked as Paid.',
+    label: 'Invoice Type' | t('billingo'),
+    instructions: 'Select an invoice type you want to create once the order is marked as Paid.' | t('billingo'),
     id: 'invoiceType',
     name: 'invoiceType',
     required: true,
     value: settings['invoiceType'] ?? null,
     options: invoiceTypeOptions
+}) }}
+
+{% set billingoPaymentMethods = {
+    '2': 'Wiretransfer',
+    '4': 'Cash on Delivery',
+    '1': 'Cash',
+    '5': 'Bankcard',
+    '6': 'SZEP card',
+    '7': 'PayPal',
+    '8': 'Postal check',
+    '9': 'Compensation',
+    '10': 'Health insurance card',
+    '11': 'Coupon',
+    '12': 'Voucher',
+} %}
+
+{{ forms.selectField({
+    label: 'Billingo Payment Method' | t('billingo'),
+    instructions: 'Select a default payment method.' | t('billingo'),
+    id: 'paymentMethod',
+    name: 'paymentMethod',
+    required: true,
+    value: settings['paymentMethod'] ?? null,
+    options: billingoPaymentMethods
 }) }}
 
 {% set templateLanguages = {
@@ -70,8 +94,8 @@
 } %}
 
 {{ forms.selectField({
-    label: 'Invoice Language',
-    instructions: 'Select language used for invoice templates here.',
+    label: 'Invoice Language' | t('billingo'),
+    instructions: 'Select language used for invoice templates here.' | t('billingo'),
     id: 'templateLangCode',
     name: 'templateLangCode',
     required: true,
@@ -85,7 +109,7 @@
 } %}
 
 {{ forms.selectField({
-    label: 'Electronic Invoices',
+    label: 'Electronic Invoices' | t('billingo'),
     id: 'electronicInvoice',
     name: 'electronicInvoice',
     required: true,
@@ -99,8 +123,8 @@
 } %}
 
 {{ forms.selectField({
-    label: 'Trigger E-mails?',
-    instructions: 'Set this to Yes if you want Commerce to trigger e-mail sending in Billingo.',
+    label: 'Trigger E-mails?' | t('billingo'),
+    instructions: 'Set this to Yes if you want Commerce to trigger e-mail sending in Billingo.' | t('billingo'),
     id: 'triggerEmails',
     name: 'triggerEmails',
     required: true,
@@ -116,8 +140,8 @@
 } %}
 
 {{ forms.selectField({
-    label: 'Default VAT',
-    instructions: 'This is the default VAT used in your store.',
+    label: 'Default VAT' | t('billingo'),
+    instructions: 'This is the default VAT used in your store.' | t('billingo'),
     id: 'defaultVat',
     name: 'defaultVat',
     required: true,
@@ -133,8 +157,8 @@
 } %}
 
 {{ forms.selectField({
-    label: 'Round To',
-    instructions: 'Optional, defaults to 0 (no rounding).',
+    label: 'Round To' | t('billingo'),
+    instructions: 'Optional, defaults to 0 (no rounding).' | t('billingo'),
     id: 'roundTo',
     name: 'roundTo',
     required: true,
@@ -143,8 +167,8 @@
 }) }}
 
 {{ forms.textField({
-    label: 'Block UID',
-    instructions: 'Enter the block UID to the invoice block ID you want to create invoice in.',
+    label: 'Block UID' | t('billingo'),
+    instructions: 'Enter the block UID to the invoice block ID you want to create invoice in.' | t('billingo'),
     id: 'blockUid',
     name: 'blockUid',
     required: true,
@@ -152,8 +176,8 @@
 }) }}
 
 {{ forms.textField({
-    label: 'Unit Type',
-    instructions: 'Unit type for sold items. Set it to anything (pieces, puppies, etc.) you want.',
+    label: 'Unit Type' | t('billingo'),
+    instructions: 'Unit type for sold items. Set it to anything (pieces, puppies, etc.) you want.' | t('billingo'),
     id: 'unitType',
     name: 'unitType',
     required: true,
@@ -210,3 +234,48 @@
         label: "Invoice Volume" | t('billingo')
     }, '<p class="error">' ~ "No volumes exist yet." | t('app') ~ '</p>') }}
 {% endif %}
+
+{% set gateways = craft.commerce.gateways.allGateways ?? null %}
+{% set gatewayList = [
+    {
+        'value': '',
+        'label': '---'
+    }
+] %}
+{% for gateway in gateways %}
+    {% set gatewayList = gatewayList|merge([{'value': gateway.id, 'label': gateway.name}]) %}
+{% endfor %}
+
+{{ forms.editableTableField({
+    label: "Payment Method mappings" | t("billingo"),
+    instructions: "Map your Payment Methods to [Billingo Payment Methods](https://billingo.readthedocs.io/en/latest/payment_methods/). You can override some of the settings if that payment method is used." | t("billingo"),
+    id: 'paymentMethodSettings',
+    name: 'paymentMethodSettings',
+    required: false,
+    cols: {
+        paymentGatewayId: {
+            heading: "Payment Gateways" | t("commerce"),
+            type: "select",
+            autopopulate: "paymentGateways",
+            options: gatewayList
+        },
+        billingoPaymentMethodId: {
+            heading: "Billingo Payment Method" | t("billingo"),
+            type: "select",
+            autopopulate: true,
+            options: billingoPaymentMethods
+        },
+        dueDays: {
+            heading: "Payment Due (days)" | t("billingo"),
+            type: "number"
+        },
+        invoiceType: {
+            heading: "Invoice Type" | t("billingo"),
+            type: "select",
+            autopopulate: true,
+            options: invoiceTypeOptions
+        }
+    },
+    rows: settings['paymentMethodSettings'],
+    maxRows: gateways | length
+}) }}

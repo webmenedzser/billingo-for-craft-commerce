@@ -93,21 +93,30 @@ class PayloadService extends Component
             __METHOD__
         );
 
+        $gatewayInvoiceSettings = $this->gatewayInvoiceSettings($order);
+        if ($gatewayInvoiceSettings['dueDays'] > 0) {
+            $dueDate = date('Y-m-d', strtotime(date('Y-m-d'). '+ ' . $gatewayInvoiceSettings['dueDays'] . ' days'));
+        }
+
         $this->invoiceData = [
             'fulfillment_date' => date('Y-m-d'),
-            'due_date' => date('Y-m-d'),
-            // TODO: setting or gateway method extension!
-            'payment_method' => 1,
+            'due_date' => $dueDate ?? date('Y-m-d'),
+            'payment_method' => $gatewayInvoiceSettings['billingoPaymentMethodId'] ? $gatewayInvoiceSettings['billingoPaymentMethodId'] : Billingo::getInstance()->getSettings()->paymentMethod,
             'comment' => $order->message ?? '',
             'template_lang_code' => (string) Billingo::getInstance()->getSettings()->templateLangCode,
             'electronic_invoice' => (int) Billingo::getInstance()->getSettings()->electronicInvoice,
             'currency' => $order->paymentCurrency,
             'client_uid' => (int) $clientId,
             'block_uid' => (int) Billingo::getInstance()->getSettings()->blockUid,
-            'type' => (int) Billingo::getInstance()->getSettings()->invoiceType,
+            'type' => (int) $gatewayInvoiceSettings['invoiceType'] ? $gatewayInvoiceSettings['invoiceType'] : Billingo::getInstance()->getSettings()->invoiceType,
             'round_to' => (int) Billingo::getInstance()->getSettings()->roundTo,
             'items' => $items,
         ];
+
+        Craft::info(
+            print_r($this->invoiceData, true),
+            __METHOD__
+        );
 
         Craft::info(
             'Creating Invoice data ended.',
@@ -223,5 +232,36 @@ class PayloadService extends Component
         }
 
         return (int) $defaultVatId;
+    }
+
+    /**
+     * Determine payment method ID for Billingo.
+     *
+     * 2 - Wiretransfer
+     * 4 - Cash on Delivery
+     * 1 - Cash
+     * 5 - Bankcard
+     * 6 - SZEP card
+     * 7 - PayPal
+     * 8 - Postal check
+     * 9 - Compensation
+     * 10 - Health insurance card
+     * 11 - Coupon
+     * 12 - Voucher
+     *
+     * @param $order
+     * @return int
+     */
+    public function gatewayInvoiceSettings($order)
+    {
+        $paymentMethodSettings = Billingo::getInstance()->getSettings()->paymentMethodSettings;
+
+        if ($paymentMethodSettings) {
+            foreach ($paymentMethodSettings as $paymentMethodSetting) {
+                if ($paymentMethodSetting['paymentGatewayId'] === $order->gatewayId) {
+                    return $paymentMethodSetting;
+                }
+            }
+        }
     }
 }

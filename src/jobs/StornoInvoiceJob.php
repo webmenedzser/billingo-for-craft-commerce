@@ -37,6 +37,6 @@ class StornoInvoiceJob extends BaseJob
      */
     protected function defaultDescription(): string
     {
-        return Craft::t('billingo', 'Stornoing invoice at Billingo.');
+        return Craft::t('billingo', 'Stornoing Invoice in Billingo.');
     }
 }

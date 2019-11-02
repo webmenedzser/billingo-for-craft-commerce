@@ -37,6 +37,6 @@ class CreateInvoiceJob extends BaseJob
      */
     protected function defaultDescription(): string
     {
-        return Craft::t('billingo', 'Sending invoice data to Billingo.');
+        return Craft::t('billingo', 'Creating Invoice in Billingo.');
     }
 }

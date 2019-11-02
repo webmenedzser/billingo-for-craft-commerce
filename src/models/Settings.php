@@ -10,6 +10,7 @@
 
 namespace webmenedzser\billingo\models;
 
+use craft\validators\ArrayValidator;
 use webmenedzser\billingo\Billingo;
 
 use Craft;
@@ -93,6 +94,13 @@ class Settings extends Model
     public $invoiceType = 3;
 
     /**
+     * Default payment method.
+     *
+     * @var int
+     */
+    public $paymentMethod;
+
+    /**
      * Round total to.
      * Note: round_to parameter is optional. One of [0, 1, 5, 10], defaults to 0 -> no rounding.
      *
@@ -144,6 +152,13 @@ class Settings extends Model
      */
     public $invoiceAssetSubpath = '';
 
+    /**
+     * Setting array for payment methods.
+     *
+     * @var array
+     */
+    public $paymentMethodSettings = [];
+
     // Public Methods
     // =========================================================================
 
@@ -179,8 +194,15 @@ class Settings extends Model
                     'triggerEmails',
                     'defaultVat',
                     'invoiceAssetVolume',
+                    'paymentMethod'
                 ],
                 'integer'
+            ],
+            [
+                [
+                    'paymentMethodSettings'
+                ],
+                ArrayValidator::class
             ],
             [
                 [
