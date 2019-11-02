@@ -100,23 +100,18 @@ class PayloadService extends Component
 
         $this->invoiceData = [
             'fulfillment_date' => date('Y-m-d'),
-            'due_date' => $dueDate ?? date('Y-m-d'),
-            'payment_method' => $gatewayInvoiceSettings['billingoPaymentMethodId'] ? $gatewayInvoiceSettings['billingoPaymentMethodId'] : Billingo::getInstance()->getSettings()->paymentMethod,
+            'due_date' => (string) ($dueDate ?? date('Y-m-d')),
+            'payment_method' => (int) ($gatewayInvoiceSettings['billingoPaymentMethodId'] ? $gatewayInvoiceSettings['billingoPaymentMethodId'] : Billingo::getInstance()->getSettings()->paymentMethod),
             'comment' => $order->message ?? '',
             'template_lang_code' => (string) Billingo::getInstance()->getSettings()->templateLangCode,
             'electronic_invoice' => (int) Billingo::getInstance()->getSettings()->electronicInvoice,
             'currency' => $order->paymentCurrency,
             'client_uid' => (int) $clientId,
             'block_uid' => (int) Billingo::getInstance()->getSettings()->blockUid,
-            'type' => (int) $gatewayInvoiceSettings['invoiceType'] ? $gatewayInvoiceSettings['invoiceType'] : Billingo::getInstance()->getSettings()->invoiceType,
+            'type' => (int) ($gatewayInvoiceSettings['invoiceType'] ? $gatewayInvoiceSettings['invoiceType'] : Billingo::getInstance()->getSettings()->invoiceType),
             'round_to' => (int) Billingo::getInstance()->getSettings()->roundTo,
             'items' => $items,
         ];
-
-        Craft::info(
-            print_r($this->invoiceData, true),
-            __METHOD__
-        );
 
         Craft::info(
             'Creating Invoice data ended.',
