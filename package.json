@@ -21,9 +21,9 @@
     "url": "git+https://github.com/webmenedzser/billingo-for-craft-commerce.git"
   },
   "scripts": {
-    "changelog": "auto-changelog -p",
-    "version": "npm run replace-version && git add -A",
-    "postversion": "npm run changelog && git commit CHANGELOG.md -m 'changelog update' && git push && git push --tags",
+    "changelog": "auto-changelog -p && git commit CHANGELOG.md -m 'changelog update'",
+    "version": "npm run replace-version && npm run changelog && git add -A",
+    "postversion": "git push && git push --tags",
     "replace-version": "replace-in-file --configFile ./.replace-in-file.config.js"
   },
   "devDependencies": {
