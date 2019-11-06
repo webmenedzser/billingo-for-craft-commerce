@@ -31,8 +31,19 @@ class AssetDownloader extends Component
     private $invoiceAssetVolume;
     private $invoiceAssetSubpath;
 
-    public $assetId;
+    /**
+     * @var Asset
+     */
+    public $asset;
 
+    /**
+     * AssetDownloader constructor.
+     *
+     * @param $invoiceNumber
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
     public function __construct($invoiceNumber)
     {
         $this->invoiceNumber = $invoiceNumber;
@@ -43,8 +54,15 @@ class AssetDownloader extends Component
         $this->invoiceAssetSubpath = Billingo::getInstance()->getSettings()->invoiceAssetSubpath;
 
         $this->downloadFile();
+        $this->saveAsset();
     }
 
+    /**
+     * Download PDF from Billingo and save it to a temporary location.
+     *
+     * @return false|int
+     * @throws \Exception
+     */
     public function downloadFile()
     {
         $billingoService = new BillingoService();
@@ -56,9 +74,22 @@ class AssetDownloader extends Component
             throw new \Exception('Error while downloading file from Billingo.');
         }
 
+        Craft::info(
+            'Invoice downloaded from Billingo for invoice nr. ' . $this->invoiceNumber,
+            __METHOD__
+        );
+
         return $result;
     }
 
+    /**
+     * Save asset to Craft volume if Volume is set in the Settings.
+     *
+     * @return bool
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
     public function saveAsset()
     {
         /**
@@ -91,8 +122,13 @@ class AssetDownloader extends Component
             throw new \Exception('Error while creating Asset.');
         }
 
-        $this->assetId = $asset->id;
+        Craft::info(
+            'Asset saved for invoice nr. ' . $this->invoiceNumber,
+            __METHOD__
+        );
 
-        return $asset;
+        $this->asset = $asset;
+
+        return true;
     }
 }

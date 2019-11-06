@@ -82,10 +82,6 @@ class BillingoService extends Component
          * Send Invoice data to Billingo API.
          */
         $this->response['invoice'] = $this->postInvoiceData($this->invoice);
-        Craft::info(
-            print_r($this->response, true),
-            __METHOD__
-        );
 
         /**
          * Find invoice nr. to be stored.
@@ -101,7 +97,7 @@ class BillingoService extends Component
          * Initiate downloading invoice to Craft.
          */
         $assetDownloader = new AssetDownloader($invoiceNumber);
-        $invoiceAssetId = $assetDownloader->assetId;
+        $invoiceAssetId = $assetDownloader->asset->id;
 
         /**
          * Create InvoiceElement to store `orderId - invoiceNumber` pairs.
