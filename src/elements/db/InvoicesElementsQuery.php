@@ -11,6 +11,7 @@ class InvoicesElementsQuery extends ElementQuery
     public $orderId;
     public $invoiceNumber;
     public $invoiceAssetId;
+    public $dateCreated;
 
     public function orderId($value)
     {
@@ -33,6 +34,13 @@ class InvoicesElementsQuery extends ElementQuery
         return $this;
     }
 
+    public function dateCreated($value)
+    {
+        $this->dateCreated = $value;
+
+        return $this;
+    }
+
     protected function beforePrepare(): bool
     {
         // join in the products table
@@ -43,6 +51,7 @@ class InvoicesElementsQuery extends ElementQuery
             'billingo_invoicesrecords.orderId',
             'billingo_invoicesrecords.invoiceNumber',
             'billingo_invoicesrecords.invoiceAssetId',
+            'billingo_invoicesrecords.dateCreated'
         ]);
 
         if ($this->orderId) {
@@ -55,6 +64,10 @@ class InvoicesElementsQuery extends ElementQuery
 
         if ($this->invoiceAssetId) {
             $this->subQuery->andWhere(Db::parseParam('billingo_invoicesrecords.invoiceAssetId', $this->invoiceAssetId));
+        }
+
+        if ($this->dateCreated) {
+            $this->subQuery->andWhere(Db::parseParam('billingo_invoicesrecords.dateCreated', $this->dateCreated));
         }
 
         return parent::beforePrepare();

@@ -176,27 +176,13 @@ class InvoicesElements extends Element
     /**
      * @inheritdoc
      */
-    protected static function defineSortOptions(): array
-    {
-        return [
-            [
-                'label' => Craft::t('commerce', 'Order Date'),
-                'orderBy' => 'elements.dateCreated',
-                'attribute' => 'dateCreated'
-            ],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
     protected static function defineTableAttributes(): array
     {
         $attributes = [
-            'date' => ['label' => Craft::t('commerce', 'Order Date')],
-            'orderId' => ['label' => Craft::t('commerce', 'Order ID')],
             'invoiceNumber' => ['label' => Craft::t('billingo', 'Invoice Number')],
-            'invoiceAssetId' => ['label' => Craft::t('billingo', 'Invoice PDF')]
+            'orderId' => ['label' => Craft::t('commerce', 'Order ID')],
+            'invoiceAssetId' => ['label' => Craft::t('billingo', 'Invoice PDF')],
+            'dateCreated' => ['label' => Craft::t('billingo', 'Invoice Date')]
         ];
 
         return $attributes;
@@ -204,7 +190,7 @@ class InvoicesElements extends Element
 
     protected static function defineSearchableAttributes(): array
     {
-        return ['id', 'orderId', 'invoiceNumber', 'invoiceAssetId'];
+        return ['orderId', 'invoiceNumber', 'invoiceAssetId'];
     }
 
     protected function tableAttributeHtml(string $attribute): string
@@ -257,6 +243,7 @@ class InvoicesElements extends Element
         $names[] = 'orderId';
         $names[] = 'invoiceNumber';
         $names[] = 'invoiceAssetId';
+        $names[] = 'dateCreated';
 
         return $names;
     }
@@ -286,7 +273,7 @@ class InvoicesElements extends Element
      */
     public function getUiLabel(): string
     {
-        return (string) Craft::$app->formatter->asDate($this->dateCreated, 'short');
+        return (string) $this->invoiceNumber;
     }
 
     /**
