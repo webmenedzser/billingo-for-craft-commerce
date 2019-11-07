@@ -207,21 +207,6 @@ class InvoicesElements extends Element
         return $attributes;
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected static function defineDefaultTableAttributes(string $source): array
-    {
-        $attributes = [
-            'postDate' => ['label' => Craft::t('app', 'Post Date')],
-            'orderId' => ['label' => Craft::t('app', 'Order ID')],
-            'invoiceNumber' => ['label' => Craft::t('app', 'Invoice Nr.')],
-            'invoiceAssetId' => ['label' => Craft::t('billingo', 'Invoice PDF')]
-        ];
-
-        return $attributes;
-    }
-
     protected static function defineSearchableAttributes(): array
     {
         return ['id', 'orderId', 'invoiceNumber', 'invoiceAssetId'];
