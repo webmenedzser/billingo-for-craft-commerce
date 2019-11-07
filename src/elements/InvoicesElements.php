@@ -271,7 +271,8 @@ class InvoicesElements extends Element
         $rules[] = [
             [
                 'orderId',
-                'invoiceNumber'
+                'invoiceNumber',
+                'invoiceAssetId'
             ],
             'number',
             'integerOnly' => true
