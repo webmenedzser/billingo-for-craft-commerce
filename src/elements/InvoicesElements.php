@@ -74,11 +74,6 @@ class InvoicesElements extends Element
         return Craft::t('billingo', 'Invoices');
     }
 
-    public static function refHandle()
-    {
-        return 'invoice-element';
-    }
-
     /**
      * @inheritdoc
      */
