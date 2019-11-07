@@ -97,7 +97,7 @@ class BillingoService extends Component
          * Initiate downloading invoice to Craft.
          */
         $assetDownloader = new AssetDownloader($invoiceNumber);
-        $invoiceAssetId = $assetDownloader->asset->id;
+        $invoiceAssetId = $assetDownloader->asset->id ?? null;
 
         /**
          * Create InvoiceElement to store `orderId - invoiceNumber` pairs.
