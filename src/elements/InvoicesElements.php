@@ -33,8 +33,6 @@ class InvoicesElements extends Element
     // Constants
     // =========================================================================
 
-    const STATUS_LIVE = 'live';
-
     // Public Properties
     // =========================================================================
 
@@ -111,17 +109,7 @@ class InvoicesElements extends Element
      */
     public static function hasStatuses(): bool
     {
-        return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function statuses(): array
-    {
-        return [
-            self::STATUS_LIVE => Craft::t('billingo', 'Live'),
-        ];
+        return false;
     }
 
     /**
