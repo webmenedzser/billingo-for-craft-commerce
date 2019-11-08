@@ -53,6 +53,11 @@ class InvoicesElements extends Element
      */
     public $invoiceAssetId;
 
+    /**
+     * @var string Date when the invoice was stornoed.
+     */
+    public $dateStornoed;
+
     // Static Methods
     // =========================================================================
 
@@ -127,25 +132,27 @@ class InvoicesElements extends Element
     {
         $sources = [
             [
-                'key' => '*',
+                'key' => 'all',
                 'label' => Craft::t('billingo', 'All invoices'),
                 'criteria' => [],
                 'hasThumbs' => false
             ],
-            // [
-                // 'key' => '*',
-                // 'label' => Craft::t('billingo', 'Active invoices'),
-                // 'criteria' => [],
-                // 'hasThumbs' => false
-            // ],
-            // [
-                // 'key' => '*',
-                // 'label' => Craft::t('billingo', 'Stornoed invoices'),
-                // 'criteria' => [
-                    // 'status' => 'deleted'
-                // ],
-                // 'hasThumbs' => false
-            // ]
+            [
+                'key' => 'active',
+                'label' => Craft::t('billingo', 'Active invoices'),
+                'criteria' => [
+                    'dateStornoed' => ':empty:'
+                ],
+                'hasThumbs' => false
+            ],
+            [
+                'key' => 'stornoed',
+                'label' => Craft::t('billingo', 'Stornoed invoices'),
+                'criteria' => [
+                    'dateStornoed' => ':notempty:'
+                ],
+                'hasThumbs' => false
+            ]
         ];
 
         return $sources;
@@ -170,7 +177,8 @@ class InvoicesElements extends Element
             'invoiceNumber' => ['label' => Craft::t('billingo', 'Invoice Number')],
             'orderId' => ['label' => Craft::t('commerce', 'Order ID')],
             'invoiceAssetId' => ['label' => Craft::t('billingo', 'Invoice PDF')],
-            'dateCreated' => ['label' => Craft::t('billingo', 'Invoice Date')]
+            'dateCreated' => ['label' => Craft::t('billingo', 'Invoice Date')],
+            'dateStornoed' => ['label' => Craft::t('billingo', 'Storno Date')]
         ];
 
         return $attributes;
@@ -213,6 +221,11 @@ class InvoicesElements extends Element
                 }
 
                 return '-';
+
+            case 'dateStornoed':
+                if ($this->dateStornoed) {
+                    return Craft::$app->formatter->asDate($this->dateStornoed);
+                }
         }
 
         return parent::tableAttributeHtml($attribute);
@@ -232,6 +245,7 @@ class InvoicesElements extends Element
         $names[] = 'invoiceNumber';
         $names[] = 'invoiceAssetId';
         $names[] = 'dateCreated';
+        $names[] = 'dateStornoed';
 
         return $names;
     }
@@ -247,7 +261,7 @@ class InvoicesElements extends Element
             [
                 'orderId',
                 'invoiceNumber',
-                'invoiceAssetId'
+                'invoiceAssetId',
             ],
             'number',
             'integerOnly' => true
@@ -337,6 +351,7 @@ class InvoicesElements extends Element
         $record->orderId = $this->orderId;
         $record->invoiceNumber = $this->invoiceNumber;
         $record->invoiceAssetId = $this->invoiceAssetId;
+        $record->dateStornoed = $this->dateStornoed;
 
         $record->save(false);
 

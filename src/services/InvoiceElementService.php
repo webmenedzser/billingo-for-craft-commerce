@@ -3,6 +3,7 @@
 
 namespace webmenedzser\billingo\services;
 
+use craft\helpers\DateTimeHelper;
 use webmenedzser\billingo\records\InvoicesRecords;
 use webmenedzser\billingo\elements\InvoicesElements;
 
@@ -71,11 +72,13 @@ class InvoiceElementService
 
         if ($invoiceElement) {
             $invoiceId = $invoiceElement->invoiceNumber;
+            $date = date('U');
+            $invoiceElement->dateStornoed = DateTimeHelper::toDateTime($date);
 
-            Craft::$app->elements->deleteElementById($invoiceElement->id, null, null, true);
+            Craft::$app->elements->saveElement($invoiceElement);
 
             Craft::info(
-                'InvoiceElement deleted.',
+                'InvoiceElement stornoed.',
                 __METHOD__
             );
 

@@ -60,7 +60,7 @@ class Billingo extends Plugin
     /**
      * @inheritdoc
      */
-    public $schemaVersion = '1.0.3';
+    public $schemaVersion = '1.3.0';
 
     /**
      * @inheritdoc

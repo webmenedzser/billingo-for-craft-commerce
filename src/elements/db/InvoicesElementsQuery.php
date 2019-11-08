@@ -12,6 +12,7 @@ class InvoicesElementsQuery extends ElementQuery
     public $invoiceNumber;
     public $invoiceAssetId;
     public $dateCreated;
+    public $dateStornoed;
 
     public function orderId($value)
     {
@@ -41,6 +42,13 @@ class InvoicesElementsQuery extends ElementQuery
         return $this;
     }
 
+    public function dateStornoed($value)
+    {
+        $this->dateStornoed = $value;
+
+        return $this;
+    }
+
     protected function beforePrepare(): bool
     {
         // join in the products table
@@ -51,7 +59,8 @@ class InvoicesElementsQuery extends ElementQuery
             'billingo_invoicesrecords.orderId',
             'billingo_invoicesrecords.invoiceNumber',
             'billingo_invoicesrecords.invoiceAssetId',
-            'billingo_invoicesrecords.dateCreated'
+            'billingo_invoicesrecords.dateCreated',
+            'billingo_invoicesrecords.dateStornoed'
         ]);
 
         if ($this->orderId) {
@@ -67,7 +76,11 @@ class InvoicesElementsQuery extends ElementQuery
         }
 
         if ($this->dateCreated) {
-            $this->subQuery->andWhere(Db::parseParam('billingo_invoicesrecords.dateCreated', $this->dateCreated));
+            $this->subQuery->andWhere(Db::parseDateParam('billingo_invoicesrecords.dateCreated', $this->dateCreated));
+        }
+
+        if ($this->dateStornoed) {
+            $this->subQuery->andWhere(Db::parseDateParam('billingo_invoicesrecords.dateStornoed', $this->dateStornoed));
         }
 
         return parent::beforePrepare();
