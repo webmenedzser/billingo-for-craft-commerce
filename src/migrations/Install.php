@@ -84,7 +84,8 @@ class Install extends Migration
                     'uid' => $this->uid(),
                     'orderId' => $this->integer()->notNull(),
                     'invoiceNumber' => $this->integer()->notNull(),
-                    'invoiceAssetId' => $this->integer()
+                    'invoiceAssetId' => $this->integer(),
+                    'dateStornoed' => $this->dateTime()
                 ]
             );
         }
