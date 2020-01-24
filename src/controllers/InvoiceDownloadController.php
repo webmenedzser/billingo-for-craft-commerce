@@ -10,16 +10,11 @@
 
 namespace webmenedzser\billingo\controllers;
 
-use webmenedzser\billingo\Billingo;
-use webmenedzser\billingo\jobs\AssetDownloadJob;
-use webmenedzser\billingo\services\AssetDownloader;
-
 use Craft;
 use craft\elements\Asset;
 use craft\web\Controller;
-use craft\helpers\StringHelper;
 
-use Otisz\BillingoConnector\Connector;
+use Yii;
 
 class InvoiceDownloadController extends Controller
 {
@@ -47,7 +42,7 @@ class InvoiceDownloadController extends Controller
         $volumePath = $asset->getVolume()->settings['path'];
         $folderPath = $asset->getFolder()->path;
 
-        $assetFilePath = \Yii::getAlias($volumePath) . $folderPath . '/' . $asset->filename;
+        $assetFilePath = Yii::getAlias($volumePath) . $folderPath . '/' . $asset->filename;
 
         /**
          * Stream the file to the user

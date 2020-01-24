@@ -20,7 +20,7 @@ use Craft;
 use craft\base\Component;
 use craft\commerce\elements\Order;
 
-use Otisz\BillingoConnector\Connector;
+use Billingo\API\Connector\HTTP\Request;
 
 /**
  * Class BillingoService
@@ -43,7 +43,7 @@ class BillingoService extends Component
     public function init()
     {
         $this->settings = Billingo::$plugin->getSettings();
-        $this->billingo = new Connector([
+        $this->billingo = new Request([
             'public_key' => $this->settings->publicApiKey,
             'private_key' => $this->settings->privateApiKey
         ]);
@@ -53,9 +53,12 @@ class BillingoService extends Component
     /**
      * Initiate Invoice creation process
      *
-     * @param $order
-     * @return mixed
+     * @param $orderId
+     * @param int $refundAmount
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\ErrorException
+     * @throws \yii\base\Exception
      */
     public function createInvoice($orderId, $refundAmount = 0)
     {
@@ -109,8 +112,11 @@ class BillingoService extends Component
     /**
      * Storno invoice at Billingo
      *
-     * @param $order
+     * @param $orderId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\ErrorException
+     * @throws \yii\base\Exception
      */
     public function stornoInvoice($orderId)
     {

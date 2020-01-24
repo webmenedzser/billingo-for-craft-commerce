@@ -19,8 +19,6 @@ use craft\elements\Asset;
 use craft\helpers\StringHelper;
 use craft\services\Volumes;
 
-use Otisz\BillingoConnector\Connector;
-
 class AssetDownloader extends Component
 {
     private $invoiceNumber;
@@ -52,6 +50,8 @@ class AssetDownloader extends Component
         $this->tempFilePath = $this->tempPath . $this->filename;
         $this->invoiceAssetVolume = Billingo::getInstance()->getSettings()->invoiceAssetVolume;
         $this->invoiceAssetSubpath = Billingo::getInstance()->getSettings()->invoiceAssetSubpath;
+
+        parent::__construct();
 
         $this->downloadFile();
         $this->saveAsset();
