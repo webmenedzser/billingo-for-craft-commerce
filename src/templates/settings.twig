@@ -141,7 +141,7 @@
 
 {{ forms.selectField({
     label: 'Default VAT' | t('billingo'),
-    instructions: 'This is the default VAT used in your store.' | t('billingo'),
+    instructions: 'This is the default VAT used in your store. Used as a fallback only, if no suitable VAT ID was found.' | t('billingo'),
     id: 'defaultVat',
     name: 'defaultVat',
     required: true,

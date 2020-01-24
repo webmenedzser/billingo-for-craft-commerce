@@ -35,7 +35,7 @@ return [
     'Round To' => 'Round To',
     'Optional, defaults to 0 (no rounding).' => 'Optional, defaults to 0 (no rounding).',
     'Default VAT' => 'Default VAT',
-    'This is the default VAT used in your store.' => 'This is the default VAT used in your store.',
+    'This is the default VAT used in your store. Used as a fallback only, if no suitable VAT ID was found.' => 'This is the default VAT used in your store. Used as a fallback only, if no suitable VAT ID was found.',
     'Trigger E-mails?' => 'Trigger E-mails?',
     'Set this to Yes if you want Commerce to trigger e-mail sending in Billingo.' => 'Set this to Yes if you want Commerce to trigger e-mail sending in Billingo.',
     'Electronic Invoices' => 'Electronic Invoices',

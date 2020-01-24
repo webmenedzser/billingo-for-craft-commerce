@@ -132,16 +132,16 @@ class PayloadService extends Component
         $items = [];
 
         foreach ($order->lineItems as $lineItem) {
-            $item = [
+            $rateAsPercent = $lineItem->taxCategory->taxRates[0]->rateAsPercent;
+
+            $items[] = [
                 'description' => (string) $lineItem->description,
                 'qty' => (float) $lineItem->qty,
                 'net_unit_price' => $lineItem->salePrice ? (float) $lineItem->salePrice : (float) $lineItem->price,
-                'vat_id' => $this->determineVatId($lineItem),
+                'vat_id' => $this->determineVatId($rateAsPercent),
                 'unit' => Billingo::getInstance()->getSettings()->unitType,
                 'item_comment' => (string) $lineItem->sku
             ];
-
-            $items[] = $item;
         }
 
         return $items;
@@ -157,13 +157,23 @@ class PayloadService extends Component
     {
         $shipping = [];
         $shippingMethod = $order->shippingMethod ?? null;
+        $adjustments = $order->adjustments;
+        $shippingTaxRate = null;
+
+        foreach ($adjustments as $adjustment) {
+            $snapshot = $adjustment->getSourceSnapshot();
+            $taxable = $snapshot['taxable'] ?? '';
+
+            if ($taxable === 'order_total_shipping') {
+                $shippingTaxRate = $snapshot['rate'] * 100 . '%';
+            }
+        }
 
         $shipping[] = [
             'description' => $shippingMethod->name ? $shippingMethod->name : Craft::t('commerce', 'Shipping'),
             'qty' => 1.0,
-            // TODO: somehow get the shipping cost tax
             'net_unit_price' => (float) $order->getTotalShippingCost(),
-            'vat_id' => $this->determineVatId(),
+            'vat_id' => $this->determineVatId($shippingTaxRate),
             'unit' => Billingo::getInstance()->getSettings()->unitType
         ];
 
@@ -191,21 +201,21 @@ class PayloadService extends Component
         return $refund;
     }
 
-    public function determineVatId(LineItem $lineItem = null)
+    public function determineVatId($rateAsPercent = null)
     {
         /**
          * Get Billingo setting for default VAT. In worst case we will return this.
          */
         $defaultVatId = Billingo::getInstance()->getSettings()->defaultVat;
 
-        if (!$lineItem) {
+        if (!$rateAsPercent) {
             return (int) $defaultVatId;
         }
 
         /**
          * Get tax rate for lineItem, as percent.
          */
-        $tax = $lineItem->taxCategory->taxRates[0]->rateAsPercent ?? '0%';
+        $tax = $rateAsPercent ?? '0%';
 
         /**
          * Possible VAT rates in Billingo.
