@@ -43,7 +43,7 @@ class PayloadService extends Component
         );
 
         $this->clientData = [
-            "name" => $order->billingAddress->businessName ? $order->billingAddress->businessName : $order->billingAddress->getFullName(),
+            "name" => $order->billingAddress->businessName ? $order->billingAddress->businessName : $order->billingAddress->fullName,
             "email" => $order->customer->email,
             "phone" => $order->billingAddress->phone,
             "billing_address" => [
