@@ -25,7 +25,7 @@
     ],
     "require": {
         "craftcms/cms": "^3.0.0-RC1",
-        "craftcms/commerce": "^2.2.0",
+        "craftcms/commerce": "^3.0.0",
         "voov/billingo-api-connector": "^1.1.1"
     },
     "autoload": {
