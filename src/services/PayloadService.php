@@ -156,7 +156,7 @@ class PayloadService extends Component
     public function createShippingItem($order)
     {
         $shipping = [];
-        $shippingMethod = $order->shippingMethod ?? null;
+        $shippingMethod = $order->shippingMethod;
         $adjustments = $order->adjustments;
         $shippingTaxRate = null;
 
@@ -170,7 +170,7 @@ class PayloadService extends Component
         }
 
         $shipping[] = [
-            'description' => $shippingMethod->name ? $shippingMethod->name : Craft::t('commerce', 'Shipping'),
+            'description' => $shippingMethod ? $shippingMethod->name : Craft::t('commerce', 'Shipping'),
             'qty' => 1.0,
             'net_unit_price' => (float) $order->getTotalShippingCost(),
             'vat_id' => $this->determineVatId($shippingTaxRate),
