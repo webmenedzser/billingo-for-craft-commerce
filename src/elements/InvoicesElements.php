@@ -201,6 +201,8 @@ class InvoicesElements extends Element
                     return Template::raw('<a href="' . $order->getCpEditUrl() . '">' . $this->orderId . '</a>');
                 }
 
+                return '-';
+
             case 'invoiceNumber':
                 return $this->invoiceNumber;
 
