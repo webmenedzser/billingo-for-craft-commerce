@@ -14,7 +14,7 @@
  * This file exists only as a template for the Billingo plugin for Craft Commerce settings.
  * It does nothing on its own.
  *
- * Don't edit this file, instead copy it to 'craft/config' as 'billingo-plugin-for-craft-commerce.php'
+ * Don't edit this file, instead copy it to 'craft/config' as 'billingo.php'
  * and make your changes there to override default settings.
  *
  * Once copied to 'craft/config', this file will be multi-environment aware as
