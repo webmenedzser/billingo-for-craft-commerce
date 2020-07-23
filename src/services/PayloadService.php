@@ -46,6 +46,7 @@ class PayloadService extends Component
             "name" => $order->billingAddress->businessName ? $order->billingAddress->businessName : $order->billingAddress->fullName,
             "email" => $order->customer->email,
             "phone" => $order->billingAddress->phone,
+            "taxcode" => $order->billingAddress->businessTaxId ? $order->billingAddress->businessTaxId : '',
             "billing_address" => [
                 "street_name" => $order->billingAddress->address1 . ' ' . $order->billingAddress->address2,
                 "street_type" => '',
