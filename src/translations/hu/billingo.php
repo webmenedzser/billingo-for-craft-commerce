@@ -28,7 +28,7 @@ return [
     'Invoice Type' => 'Számla típusa',
     'Select an invoice type you want to create once the order is marked as Paid.' => 'Válaszd ki, milyen számla típus jöjjön létre a rendelés fizetettre állításakor.',
     'Invoice Volume' => 'Számla Kötet',
-    'Where do you want to store Invoices? Note that the subfolder path can contain variables like <code>{postDate}</code>.' => 'Hol szeretnék tárolni a Számláidat? Az almappa útvonal változókat (mint amilyen a <code>{postDate}</code>) is tartalmazhat.',
+    'Where do you want to store Invoices? Note that the subfolder path can contain variables like <code>{postDate}</code>.' => 'Hol szeretnéd tárolni a Számláidat? Az almappa útvonal változókat (mint amilyen a <code>{postDate}</code>) is tartalmazhat.',
     'Unit Type' => 'Egység típus',
     'Unit type for sold items. Set it to anything (pieces, puppies, etc.) you want.' => 'Az értékesített elemek egység típusa. Bármilyen szövegre állítható (darab, kutyus, stb.)',
     'Block UID' => 'Számlatömb UID',
