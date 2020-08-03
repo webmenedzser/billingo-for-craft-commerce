@@ -73,4 +73,8 @@ return [
     'Health insurance card' => 'Egészségkártya',
     'Coupon' => 'Kupon',
     'Voucher' => 'Utalvány',
+
+    'Creating Invoice in Billingo.' => 'Számla létrehozása a Billingo-ban.',
+    'Downloading invoice PDF from Billingo.' => 'Számla PDF letöltése Billingo-ból.',
+    'Stornoing Invoice in Billingo.' => 'Számla sztornózása Billingo-ban.'
 ];
