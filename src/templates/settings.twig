@@ -59,17 +59,17 @@
 }) }}
 
 {% set billingoPaymentMethods = {
-    '2': 'Wiretransfer',
-    '4': 'Cash on Delivery',
-    '1': 'Cash',
-    '5': 'Bankcard',
-    '6': 'SZEP card',
-    '7': 'PayPal',
-    '8': 'Postal check',
-    '9': 'Compensation',
-    '10': 'Health insurance card',
-    '11': 'Coupon',
-    '12': 'Voucher',
+    '2': 'Wiretransfer' | t('billingo'),
+    '4': 'Cash on Delivery' | t('billingo'),
+    '1': 'Cash' | t('billingo'),
+    '5': 'Bankcard' | t('billingo'),
+    '6': 'SZEP card' | t('billingo'),
+    '7': 'PayPal' | t('billingo'),
+    '8': 'Postal check' | t('billingo'),
+    '9': 'Compensation' | t('billingo'),
+    '10': 'Health insurance card' | t('billingo'),
+    '11': 'Coupon' | t('billingo'),
+    '12': 'Voucher' | t('billingo'),
 } %}
 
 {{ forms.selectField({
@@ -83,14 +83,14 @@
 }) }}
 
 {% set templateLanguages = {
-    'hu': 'Hungarian' | t,
-    'en': 'English' | t,
-    'de': 'German' | t,
-    'fr': 'French' | t,
-    'hr': 'Croatian' | t,
-    'it': 'Italian' | t,
-    'ro': 'Romanian' | t,
-    'sk': 'Slovak' | t
+    'hu': 'Hungarian' | t('billingo'),
+    'en': 'English' | t('billingo'),
+    'de': 'German' | t('billingo'),
+    'fr': 'French' | t('billingo'),
+    'hr': 'Croatian' | t('billingo'),
+    'it': 'Italian' | t('billingo'),
+    'ro': 'Romanian' | t('billingo'),
+    'sk': 'Slovak' | t('billingo')
 } %}
 
 {{ forms.selectField({
@@ -104,8 +104,8 @@
 }) }}
 
 {% set electronicInvoiceOptions = {
-    '1': 'Yes' | t,
-    '0': 'No' | t
+    '1': 'Yes' | t('billingo'),
+    '0': 'No' | t('billingo')
 } %}
 
 {{ forms.selectField({
@@ -118,8 +118,8 @@
 }) }}
 
 {% set emailTriggerOptions = {
-    1: 'Yes' | t,
-    0: 'No' | t
+    1: 'Yes' | t('billingo'),
+    0: 'No' | t('billingo')
 } %}
 
 {{ forms.selectField({
@@ -254,7 +254,7 @@
     required: false,
     cols: {
         paymentGatewayId: {
-            heading: "Payment Gateways" | t("commerce"),
+            heading: "Payment Gateways" | t("billingo"),
             type: "select",
             autopopulate: "paymentGateways",
             options: gatewayList
