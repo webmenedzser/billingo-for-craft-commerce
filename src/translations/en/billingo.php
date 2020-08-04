@@ -22,6 +22,7 @@ return [
     'Invoice Number' => 'Invoice Number',
     'Payment Method mappings' => 'Payment Method mappings',
     'Map your Payment Methods to [Billingo Payment Methods](https://billingo.readthedocs.io/en/latest/payment_methods/). You can override some of the settings if that payment method is used.' => 'Map your Payment Methods to [Billingo Payment Methods](https://billingo.readthedocs.io/en/latest/payment_methods/). You can override some of the settings if that payment method is used.',
+    'Payment Gateways' => 'Payment Gateways',
     'Billingo Payment Method' => 'Billingo Payment Method',
     'Payment Due (days)' => 'Payment Due (days)',
     'Invoice Type' => 'Invoice Type',
@@ -47,5 +48,33 @@ return [
     'Private API Key' => 'Private API Key',
     'Enter Billingo private API key here.' => 'Enter Billingo private API key here.',
     'Plugin Name' => 'Plugin Name',
-    'Override plugin name.' => 'Override plugin name.'
+    'Override plugin name.' => 'Override plugin name.',
+
+    'Hungarian' => 'Hungarian',
+    'English' => 'English',
+    'German' => 'German',
+    'French' => 'French',
+    'Croatian' => 'Croatian',
+    'Italian' => 'Italian',
+    'Romanian' => 'Romanian',
+    'Slovak' => 'Slovak',
+
+    'Yes' => 'Yes',
+    'No' => 'No',
+
+    'Wiretransfer' => 'Wiretransfer',
+    'Cash on Delivery' => 'Cash on Delivery',
+    'Cash' => 'Cash',
+    'Bankcard' => 'Bankcard',
+    'SZEP card' => 'SZEP card',
+    'PayPal' => 'PayPal',
+    'Postal check' => 'Postal check',
+    'Compensation' => 'Compensation',
+    'Health insurance card' => 'Health insurance card',
+    'Coupon' => 'Coupon',
+    'Voucher' => 'Voucher',
+
+    'Creating Invoice in Billingo.' => 'Creating Invoice in Billingo.',
+    'Downloading invoice PDF from Billingo.' => 'Downloading invoice PDF from Billingo.',
+    'Stornoing Invoice in Billingo.' => 'Stornoing Invoice in Billingo.',
 ];
