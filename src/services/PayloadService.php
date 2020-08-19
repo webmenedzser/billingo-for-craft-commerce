@@ -17,6 +17,7 @@ use Craft;
 use craft\base\Component;
 use craft\commerce\records\TaxRate;
 use craft\commerce\models\LineItem;
+use craft\commerce\elements\Order;
 
 /**
  * Class PayloadService
@@ -80,9 +81,9 @@ class PayloadService extends Component
     public function createInvoiceData($order, $clientId, $refundAmount = 0)
     {
         $lineItems = $this->createItemsArray($order);
-        $shippingItem = $this->createShippingItem($order);
+        $adjustments = $this->createShippingAndDiscountAdjustmentItems($order);
 
-        $items = array_merge($lineItems, $shippingItem);
+        $items = array_merge($lineItems, $adjustments);
 
         if ($refundAmount) {
             $refundItem = $this->createRefundItem($refundAmount);
@@ -149,39 +150,6 @@ class PayloadService extends Component
     }
 
     /**
-     * Create a Billingo lineItem for Shipping costs
-     *
-     * @param $order
-     * @return array
-     */
-    public function createShippingItem($order)
-    {
-        $shipping = [];
-        $shippingMethod = $order->shippingMethod;
-        $adjustments = $order->adjustments;
-        $shippingTaxRate = null;
-
-        foreach ($adjustments as $adjustment) {
-            $snapshot = $adjustment->getSourceSnapshot();
-            $taxable = $snapshot['taxable'] ?? '';
-
-            if ($taxable === 'order_total_shipping') {
-                $shippingTaxRate = $snapshot['rate'] * 100 . '%';
-            }
-        }
-
-        $shipping[] = [
-            'description' => $shippingMethod ? $shippingMethod->name : Craft::t('commerce', 'Shipping'),
-            'qty' => 1.0,
-            'net_unit_price' => (float) $order->getTotalShippingCost(),
-            'vat_id' => $this->determineVatId($shippingTaxRate),
-            'unit' => Billingo::getInstance()->getSettings()->unitType
-        ];
-
-        return $shipping;
-    }
-
-    /**
      * Create a Billingo lineItem for Refunds.
      *
      * @param $order
@@ -200,6 +168,44 @@ class PayloadService extends Component
         ];
 
         return $refund;
+    }
+
+    /**
+     * Create lineItems for shipping & discount adjustments.
+     *
+     * @param Order $order
+     *
+     * @return array
+     */
+    public function createShippingAndDiscountAdjustmentItems(Order $order)
+    {
+        $adjustments = [];
+        $discountAdjustments = $order->getAdjustmentsByType('discount');
+        $shippingAdjustments = $order->getAdjustmentsByType('shipping');
+
+        foreach ($discountAdjustments as $adjustment) {
+            $adjustments[] = [
+                'description' => (string) $adjustment->name,
+                'item_comment' => (string) $adjustment->description,
+                'qty' => (float) 1.0,
+                'net_unit_price' => $adjustment->amount,
+                'vat_id' => $this->determineVatId(),
+                'unit' => Billingo::getInstance()->getSettings()->unitType,
+            ];
+        }
+
+        foreach ($shippingAdjustments as $adjustment) {
+            $adjustments[] = [
+                'description' => (string) $adjustment->name,
+                'item_comment' => (string) $adjustment->description,
+                'qty' => (float) 1.0,
+                'net_unit_price' => $adjustment->amount,
+                'vat_id' => $this->determineVatId(),
+                'unit' => Billingo::getInstance()->getSettings()->unitType,
+            ];
+        }
+
+        return $adjustments;
     }
 
     public function determineVatId($rateAsPercent = null)
