@@ -43,8 +43,10 @@ class PayloadService extends Component
             __METHOD__
         );
 
+        $fullName = $order->billingAddress->fullName ?: ($order->billingAddress->lastName . ' ' . $order->billingAddress->firstName);
+
         $this->clientData = [
-            "name" => $order->billingAddress->businessName ? $order->billingAddress->businessName : $order->billingAddress->fullName,
+            "name" => $order->billingAddress->businessName ?: $fullName,
             "email" => $order->customer->email,
             "phone" => $order->billingAddress->phone,
             "taxcode" => $order->billingAddress->businessTaxId ? $order->billingAddress->businessTaxId : '',
