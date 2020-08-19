@@ -77,4 +77,8 @@ return [
     'Creating Invoice in Billingo.' => 'Creating Invoice in Billingo.',
     'Downloading invoice PDF from Billingo.' => 'Downloading invoice PDF from Billingo.',
     'Stornoing Invoice in Billingo.' => 'Stornoing Invoice in Billingo.',
+
+
+    'Shipping: ' => 'Shipping: ',
+    'Discount: ' => 'Discount: '
 ];
