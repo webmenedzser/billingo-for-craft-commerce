@@ -76,5 +76,8 @@ return [
 
     'Creating Invoice in Billingo.' => 'Számla létrehozása a Billingo-ban.',
     'Downloading invoice PDF from Billingo.' => 'Számla PDF letöltése Billingo-ból.',
-    'Stornoing Invoice in Billingo.' => 'Számla sztornózása Billingo-ban.'
+    'Stornoing Invoice in Billingo.' => 'Számla sztornózása Billingo-ban.',
+
+    'Shipping: ' => 'Szállítás: ',
+    'Discount: ' => 'Kedvezmény: '
 ];
