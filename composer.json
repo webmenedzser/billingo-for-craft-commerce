@@ -2,7 +2,7 @@
     "name": "webmenedzser/billingo",
     "description": "Integrate Craft Commerce with Billingo",
     "type": "craft-plugin",
-    "version": "1.5.11",
+    "version": "1.5.12",
     "keywords": [
         "craft",
         "cms",
