@@ -67,6 +67,13 @@ class BillingoService extends Component
             ->one();
 
         /**
+         * Prevent billing if the selected Payment Method does not have Payment Method setting.
+         */
+        if (!$this->payloadService->gatewayInvoiceSettings($this->order)) {
+            return null;
+        }
+
+        /**
          * Prepare Client data to send.
          */
         $this->client = $this->payloadService->createClientData($this->order);

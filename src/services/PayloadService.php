@@ -277,5 +277,7 @@ class PayloadService extends Component
                 }
             }
         }
+
+        return null;
     }
 }
