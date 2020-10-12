@@ -27,7 +27,7 @@
     "replace-version": "replace-in-file --configFile ./.replace-in-file.config.js"
   },
   "devDependencies": {
-    "auto-changelog": "^1.16.2",
-    "replace-in-file": "^4.2.0"
+    "auto-changelog": "^1.16.4",
+    "replace-in-file": "^4.3.1"
   }
 }
