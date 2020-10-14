@@ -278,7 +278,7 @@ class BillingoService extends Component
             );
         }
 
-        return $response;
+        return $response->getBody()->getContents();
     }
 
     /**
