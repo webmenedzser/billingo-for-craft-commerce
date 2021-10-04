@@ -44,8 +44,8 @@ class BillingoService extends Component
     {
         $this->settings = Billingo::$plugin->getSettings();
         $this->billingo = new Request([
-            'public_key' => $this->settings->publicApiKey,
-            'private_key' => $this->settings->privateApiKey
+            'public_key' => Craft::parseEnv($this->settings->publicApiKey),
+            'private_key' => Craft::parseEnv($this->settings->privateApiKey)
         ]);
         $this->payloadService = new PayloadService();
     }

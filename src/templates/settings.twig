@@ -25,21 +25,23 @@
     value: settings['pluginName'] ?? null
 }) }}
 
-{{ forms.textField({
+{{ forms.autosuggestField({
     label: 'Public API Key' | t('billingo'),
     instructions: 'Enter Billingo public API key here.' | t('billingo'),
     id: 'publicApiKey',
     name: 'publicApiKey',
     required: true,
+    suggestEnvVars: true,
     value: settings['publicApiKey'] ?? null
 }) }}
 
-{{ forms.textField({
+{{ forms.autosuggestField({
     label: 'Private API Key' | t('billingo'),
     instructions: 'Enter Billingo private API key here.' | t('billingo'),
     id: 'privateApiKey',
     name: 'privateApiKey',
     required: true,
+    suggestEnvVars: true,
     value: settings['privateApiKey'] ?? null
 }) }}
 
