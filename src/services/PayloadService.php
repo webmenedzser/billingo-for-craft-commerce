@@ -141,7 +141,7 @@ class PayloadService extends Component
             $items[] = [
                 'description' => (string) $lineItem->description,
                 'qty' => (float) $lineItem->qty,
-                'net_unit_price' => $lineItem->salePrice ? (float) $lineItem->salePrice : (float) $lineItem->price,
+                'net_unit_price' => $lineItem->salePrice ? (float) ($lineItem->salePrice - $lineItem->getTaxIncluded()) : (float) ($lineItem->price - $lineItem->getTaxIncluded()),
                 'vat_id' => $this->determineVatId($rateAsPercent),
                 'unit' => Billingo::getInstance()->getSettings()->unitType,
                 'item_comment' => (string) $lineItem->sku
