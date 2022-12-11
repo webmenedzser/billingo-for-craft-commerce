@@ -41,13 +41,10 @@ class InvoicesField extends BaseRelationField
         return Craft::t('billingo', 'Select an invoice');
     }
 
-    // Protected Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
-    protected static function elementType(): string
+    public static function elementType(): string
     {
         return InvoicesElements::class;
     }
