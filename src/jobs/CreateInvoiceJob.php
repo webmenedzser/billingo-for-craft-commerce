@@ -21,7 +21,7 @@ class CreateInvoiceJob extends BaseJob
      *
      * More info: https://github.com/yiisoft/yii2-queue
      */
-    public function execute($orderId)
+    public function execute($orderId): void
     {
         $billingoService = new BillingoService();
         $billingoService->createInvoice($this->orderId);

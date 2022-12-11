@@ -21,7 +21,7 @@ class StornoInvoiceJob extends BaseJob
      *
      * More info: https://github.com/yiisoft/yii2-queue
      */
-    public function execute($queue)
+    public function execute($queue): void
     {
         $billingoService = new BillingoService();
         $billingoService->stornoInvoice($this->orderId);

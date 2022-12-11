@@ -22,7 +22,7 @@ class AssetDownloadJob extends BaseJob
      *
      * More info: https://github.com/yiisoft/yii2-queue
      */
-    public function execute($invoiceNumber)
+    public function execute($invoiceNumber): void
     {
         $assetDownloader = new AssetDownloader($invoiceNumber);
     }

@@ -255,7 +255,7 @@ class InvoicesElements extends Element
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [];
 
@@ -291,7 +291,7 @@ class InvoicesElements extends Element
     /**
      * @inheritdoc
      */
-    public function getFieldLayout()
+    public function getFieldLayout(): ?\craft\models\FieldLayout
     {
         return Craft::$app->fields->getLayoutByType(InvoicesElements::class);
     }
@@ -337,7 +337,7 @@ class InvoicesElements extends Element
     /**
      * @inheritdoc
      */
-    public function afterSave(bool $isNew)
+    public function afterSave(bool $isNew): void
     {
         if (!$isNew) {
             $record = InvoicesRecords::findOne($this->id);
@@ -373,7 +373,7 @@ class InvoicesElements extends Element
     /**
      * @inheritdoc
      */
-    public function afterDelete()
+    public function afterDelete(): void
     {
     }
 
@@ -388,7 +388,7 @@ class InvoicesElements extends Element
     /**
      * @inheritdoc
      */
-    public function afterMoveInStructure(int $structureId)
+    public function afterMoveInStructure(int $structureId): void
     {
     }
 }

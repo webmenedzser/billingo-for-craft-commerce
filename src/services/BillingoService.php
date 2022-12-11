@@ -40,7 +40,7 @@ class BillingoService extends Component
     private $payloadService;
     public $response = [];
 
-    public function init()
+    public function init(): void
     {
         $this->settings = Billingo::$plugin->getSettings();
         $this->billingo = new Request([

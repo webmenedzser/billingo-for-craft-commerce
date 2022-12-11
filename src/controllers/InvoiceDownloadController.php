@@ -20,7 +20,7 @@ class InvoiceDownloadController extends Controller
 {
     // Public Properties
     // =========================================================================
-    public $allowAnonymous = true;
+    public array|int|bool $allowAnonymous = true;
 
     public function actionServe($assetId)
     {

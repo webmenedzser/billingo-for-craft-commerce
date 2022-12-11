@@ -59,17 +59,17 @@ class Billingo extends Plugin
     /**
      * @inheritdoc
      */
-    public $schemaVersion = '1.3.0';
+    public string $schemaVersion = '1.3.0';
 
     /**
      * @inheritdoc
      */
-    public $hasCpSettings = true;
+    public bool $hasCpSettings = true;
 
     /**
      * @inheritdoc
      */
-    public $hasCpSection = true;
+    public bool $hasCpSection = true;
 
     // Public Methods
     // =========================================================================
@@ -95,7 +95,7 @@ class Billingo extends Plugin
         return Craft::t('billingo', $this->getSettings()->pluginName);
     }
 
-    public function getCpNavItem()
+    public function getCpNavItem(): ?array
     {
         $navItem = parent::getCpNavItem();
         $navItem['label'] = $this->getPluginName() ? $this->getPluginName() : 'Billingo';
