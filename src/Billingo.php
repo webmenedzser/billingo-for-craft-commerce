@@ -15,8 +15,6 @@ use webmenedzser\billingo\jobs\CreateInvoiceJob;
 use webmenedzser\billingo\jobs\StornoInvoiceJob;
 use webmenedzser\billingo\models\Settings;
 use webmenedzser\billingo\elements\InvoicesElements;
-use webmenedzser\billingo\services\BillingoService;
-use webmenedzser\billingo\controllers\InvoiceDownloadController;
 
 use Craft;
 use craft\helpers\UrlHelper;
@@ -29,7 +27,6 @@ use craft\services\Fields;
 use craft\services\Plugins;
 use craft\commerce\elements\Order;
 use craft\commerce\events\TransactionEvent;
-use craft\commerce\events\ProcessPaymentEvent;
 use craft\commerce\services\Payments;
 use craft\web\UrlManager;
 
@@ -87,7 +84,6 @@ class Billingo extends Plugin
         $this->_registerFieldType();
         $this->_registerCpRoutes();
         $this->_registerTransactionEvents();
-        $this->_registerLogger();
     }
 
     public function getPluginName(): string
@@ -202,18 +198,5 @@ class Billingo extends Plugin
                 ]));
             }
         );
-    }
-
-    private function _registerLogger()
-    {
-        // Create a new file target
-        $fileTarget = new \craft\log\FileTarget([
-            'logFile' => '@storage/logs/billingo.log',
-            'categories' => ['webmenedzser\billingo\*']
-        ]);
-
-        // Add the new target file target to the dispatcher
-        Craft::getLogger()->dispatcher->targets[] = $fileTarget;
-
     }
 }
