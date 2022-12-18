@@ -11,6 +11,7 @@
 namespace webmenedzser\billingo\services;
 
 use webmenedzser\billingo\Billingo;
+use webmenedzser\billingo\events\BeforeInvoiceRequestEvent;
 use webmenedzser\billingo\models\Settings;
 use webmenedzser\billingo\services\PayloadService;
 use webmenedzser\billingo\services\InvoiceElementService;
@@ -32,13 +33,15 @@ class BillingoService extends Component
     // Public Methods
     // =========================================================================
 
-    private $settings;
     private $billingo;
     private $order;
     private $client;
     private $invoice;
     private $payloadService;
+    public $settings;
     public $response = [];
+
+    public const EVENT_BEFORE_INVOICE_REQUEST = 'onBeforeInvoiceRequest';
 
     public function init()
     {
@@ -328,6 +331,9 @@ class BillingoService extends Component
             'Posting to Billingo "' . $endpoint . '" API endpoint.',
             __METHOD__
         );
+
+        $event = new BeforeInvoiceRequestEvent();
+        $this->trigger(self::EVENT_BEFORE_INVOICE_REQUEST, $event);
 
         try {
             $response = $this->billingo->post($endpoint, $payload);
