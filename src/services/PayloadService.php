@@ -43,13 +43,13 @@ class PayloadService extends Component
             __METHOD__
         );
 
-        $fullName = $order->billingAddress->fullName ?: ($order->billingAddress->lastName . ' ' . $order->billingAddress->firstName);
+        $fullName = $order->billingAddress->fullName;
 
         $this->clientData = [
-            "name" => $order->billingAddress->businessName ?: $fullName,
+            "name" => $order->billingAddress->organization ?: $fullName,
             "email" => $order->customer->email,
             "phone" => $order->billingAddress->phone,
-            "taxcode" => $order->billingAddress->businessTaxId ? $order->billingAddress->businessTaxId : '',
+            "taxcode" => $order->billingAddress->organizationTaxId ?: '',
             "billing_address" => [
                 "street_name" => $order->billingAddress->address1 . ' ' . $order->billingAddress->address2,
                 "street_type" => '',
@@ -60,7 +60,6 @@ class PayloadService extends Component
                 "door" => '',
                 "city" => $order->billingAddress->city,
                 "postcode" => $order->billingAddress->zipCode,
-                // TODO: wait for reply from Billingo
                 "country" => $order->billingAddress->countryText,
                 "district" => ''
             ]
