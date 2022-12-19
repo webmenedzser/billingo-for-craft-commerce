@@ -34,12 +34,13 @@ class BillingoService extends Component
     // =========================================================================
 
     private $billingo;
-    private $order;
     private $client;
     private $invoice;
     private $payloadService;
-    public $settings;
+
+    public $order;
     public $response = [];
+    public $settings;
 
     public const EVENT_BEFORE_INVOICE_REQUEST = 'onBeforeInvoiceRequest';
 
