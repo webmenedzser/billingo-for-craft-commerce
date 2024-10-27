@@ -11,6 +11,7 @@
 namespace webmenedzser\billingo\services;
 
 use webmenedzser\billingo\Billingo;
+use webmenedzser\billingo\events\AfterInvoiceDataCreated;
 use webmenedzser\billingo\models\Settings;
 
 use Craft;
@@ -28,6 +29,8 @@ class PayloadService extends Component
 {
     private $clientData;
     private $invoiceData;
+
+    public const EVENT_AFTER_INVOICE_DATA_CREATED = 'onAfterInvoiceDataCreated';
 
     /**
      * Create Client data from Order.
@@ -121,6 +124,12 @@ class PayloadService extends Component
             'Creating Invoice data ended.',
             __METHOD__
         );
+
+        $event = new AfterInvoiceDataCreated([
+            'invoiceData' => $this->invoiceData
+        ]);
+        $this->trigger(self::EVENT_AFTER_INVOICE_DATA_CREATED, $event);
+        $this->invoiceData = $event->invoiceData;
 
         return $this->invoiceData;
     }
