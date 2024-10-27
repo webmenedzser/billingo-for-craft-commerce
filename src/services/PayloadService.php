@@ -126,7 +126,8 @@ class PayloadService extends Component
         );
 
         $event = new AfterInvoiceDataCreated([
-            'invoiceData' => $this->invoiceData
+            'invoiceData' => $this->invoiceData,
+            'order' => $order
         ]);
         $this->trigger(self::EVENT_AFTER_INVOICE_DATA_CREATED, $event);
         $this->invoiceData = $event->invoiceData;
