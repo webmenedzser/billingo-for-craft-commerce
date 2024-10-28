@@ -33,10 +33,10 @@ class BillingoService extends Component
     // Public Methods
     // =========================================================================
 
-    private $billingo;
-    private $client;
     private $payloadService;
 
+    public $billingo;
+    public $client;
     public $order;
     public $invoice;
     public $response = [];
