@@ -83,7 +83,7 @@ class PayloadService extends Component
      * @param $order
      * @return array
      */
-    public function createInvoiceData($order, $clientId, $refundAmount = 0)
+    public function createInvoiceData(Order $order, $clientId, $refundAmount = 0)
     {
         $lineItems = $this->createItemsArray($order);
         $adjustments = $this->createShippingAndDiscountAdjustmentItems($order);
@@ -105,12 +105,23 @@ class PayloadService extends Component
             $dueDate = date('Y-m-d', strtotime(date('Y-m-d'). '+ ' . $gatewayInvoiceSettings['dueDays'] . ' days'));
         }
 
+        $language = Billingo::getInstance()->getSettings()->templateLangCode;
+        $comment = Craft::t(
+            'billingo',
+            'Order reference: {orderReference}',
+            ['orderReference' => $order->reference],
+            $language
+        ) . PHP_EOL;
+        if ($order->message) {
+            $comment .= $order->message;
+        }
+
         $this->invoiceData = [
             'fulfillment_date' => date('Y-m-d'),
             'due_date' => (string) ($dueDate ?? date('Y-m-d')),
             'payment_method' => (int) ($gatewayInvoiceSettings['billingoPaymentMethodId'] ? $gatewayInvoiceSettings['billingoPaymentMethodId'] : Billingo::getInstance()->getSettings()->paymentMethod),
-            'comment' => $order->message ?? '',
-            'template_lang_code' => (string) Billingo::getInstance()->getSettings()->templateLangCode,
+            'comment' => $comment,
+            'template_lang_code' => (string) $language,
             'electronic_invoice' => (int) Billingo::getInstance()->getSettings()->electronicInvoice,
             'currency' => $order->paymentCurrency,
             'client_uid' => (int) $clientId,

@@ -79,5 +79,7 @@ return [
     'Stornoing Invoice in Billingo.' => 'Számla sztornózása Billingo-ban.',
 
     'Shipping: ' => 'Szállítás: ',
-    'Discount: ' => 'Kedvezmény: '
+    'Discount: ' => 'Kedvezmény: ',
+
+    'Order reference: {orderReference}' => 'Rendelés azonosító: {orderReference}',
 ];
