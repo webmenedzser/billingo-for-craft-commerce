@@ -163,7 +163,7 @@ class PayloadService extends Component
                 'description' => (string) $lineItem->description,
                 'qty' => (float) $lineItem->qty,
                 'net_unit_price' => $lineItem->salePrice ? (float) $lineItem->salePrice : (float) $lineItem->price,
-                'vat_id' => $this->determineVatId($rateAsPercent),
+                'vat_id' => self::determineVatId($rateAsPercent),
                 'unit' => Billingo::getInstance()->getSettings()->unitType,
                 'item_comment' => (string) $lineItem->sku
             ];
@@ -186,7 +186,7 @@ class PayloadService extends Component
             'description' => Craft::t('commerce', 'Refund'),
             'qty' => 1.0,
             'net_unit_price' => (float) -$refundAmount,
-            'vat_id' => $this->determineVatId(),
+            'vat_id' => self::determineVatId(),
             'unit' => Billingo::getInstance()->getSettings()->unitType
         ];
 
@@ -212,7 +212,7 @@ class PayloadService extends Component
                 'item_comment' => (string) $adjustment->description,
                 'qty' => (float) 1.0,
                 'net_unit_price' => $adjustment->amount,
-                'vat_id' => $this->determineVatId(),
+                'vat_id' => self::determineVatId(),
                 'unit' => Billingo::getInstance()->getSettings()->unitType,
             ];
         }
@@ -223,7 +223,7 @@ class PayloadService extends Component
                 'item_comment' => (string) $adjustment->description,
                 'qty' => (float) 1.0,
                 'net_unit_price' => $adjustment->amount,
-                'vat_id' => $this->determineVatId(),
+                'vat_id' => self::determineVatId(),
                 'unit' => Billingo::getInstance()->getSettings()->unitType,
             ];
         }
@@ -231,7 +231,7 @@ class PayloadService extends Component
         return $adjustments;
     }
 
-    public function determineVatId($rateAsPercent = null)
+    public static function determineVatId($rateAsPercent = null)
     {
         /**
          * Get Billingo setting for default VAT. In worst case we will return this.
