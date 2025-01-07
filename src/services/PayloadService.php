@@ -11,6 +11,7 @@
 namespace webmenedzser\billingo\services;
 
 use webmenedzser\billingo\Billingo;
+use webmenedzser\billingo\events\AfterInvoiceDataCreated;
 use webmenedzser\billingo\models\Settings;
 
 use Craft;
@@ -29,6 +30,8 @@ class PayloadService extends Component
     private $clientData;
     private $invoiceData;
 
+    public const EVENT_AFTER_INVOICE_DATA_CREATED = 'onAfterInvoiceDataCreated';
+
     /**
      * Create Client data from Order.
      *
@@ -36,7 +39,7 @@ class PayloadService extends Component
      * @return array
      * @throws \yii\base\ErrorException
      */
-    public function createClientData($order)
+    public function createClientData(Order $order)
     {
         Craft::info(
             'Creating Client data started.',
@@ -60,7 +63,7 @@ class PayloadService extends Component
                 "door" => '',
                 "city" => $order->billingAddress->city,
                 "postcode" => $order->billingAddress->zipCode,
-                "country" => $order->billingAddress->countryText,
+                "country" => CountryService::getCountryNameByCode($order->billingAddress->countryIso),
                 "district" => ''
             ]
         ];
@@ -79,7 +82,7 @@ class PayloadService extends Component
      * @param $order
      * @return array
      */
-    public function createInvoiceData($order, $clientId, $refundAmount = 0)
+    public function createInvoiceData(Order $order, $clientId, $refundAmount = 0)
     {
         $lineItems = $this->createItemsArray($order);
         $adjustments = $this->createShippingAndDiscountAdjustmentItems($order);
@@ -101,12 +104,23 @@ class PayloadService extends Component
             $dueDate = date('Y-m-d', strtotime(date('Y-m-d'). '+ ' . $gatewayInvoiceSettings['dueDays'] . ' days'));
         }
 
+        $language = Billingo::getInstance()->getSettings()->templateLangCode;
+        $comment = Craft::t(
+            'billingo',
+            'Order reference: {orderReference}',
+            ['orderReference' => $order->reference],
+            $language
+        ) . PHP_EOL;
+        if ($order->message) {
+            $comment .= $order->message;
+        }
+
         $this->invoiceData = [
             'fulfillment_date' => date('Y-m-d'),
             'due_date' => (string) ($dueDate ?? date('Y-m-d')),
             'payment_method' => (int) ($gatewayInvoiceSettings['billingoPaymentMethodId'] ? $gatewayInvoiceSettings['billingoPaymentMethodId'] : Billingo::getInstance()->getSettings()->paymentMethod),
-            'comment' => $order->message ?? '',
-            'template_lang_code' => (string) Billingo::getInstance()->getSettings()->templateLangCode,
+            'comment' => $comment,
+            'template_lang_code' => (string) $language,
             'electronic_invoice' => (int) Billingo::getInstance()->getSettings()->electronicInvoice,
             'currency' => $order->paymentCurrency,
             'client_uid' => (int) $clientId,
@@ -120,6 +134,13 @@ class PayloadService extends Component
             'Creating Invoice data ended.',
             __METHOD__
         );
+
+        $event = new AfterInvoiceDataCreated([
+            'invoiceData' => $this->invoiceData,
+            'order' => $order
+        ]);
+        $this->trigger(self::EVENT_AFTER_INVOICE_DATA_CREATED, $event);
+        $this->invoiceData = $event->invoiceData;
 
         return $this->invoiceData;
     }
@@ -140,8 +161,8 @@ class PayloadService extends Component
             $items[] = [
                 'description' => (string) $lineItem->description,
                 'qty' => (float) $lineItem->qty,
-                'net_unit_price' => $lineItem->salePrice ? (float) ($lineItem->salePrice - $lineItem->getTaxIncluded()) : (float) ($lineItem->price - $lineItem->getTaxIncluded()),
-                'vat_id' => $this->determineVatId($rateAsPercent),
+                'net_unit_price' => $lineItem->salePrice ? (float) $lineItem->salePrice : (float) $lineItem->price,
+                'vat_id' => self::determineVatId($rateAsPercent),
                 'unit' => Billingo::getInstance()->getSettings()->unitType,
                 'item_comment' => (string) $lineItem->sku
             ];
@@ -164,7 +185,7 @@ class PayloadService extends Component
             'description' => Craft::t('commerce', 'Refund'),
             'qty' => 1.0,
             'net_unit_price' => (float) -$refundAmount,
-            'vat_id' => $this->determineVatId(),
+            'vat_id' => self::determineVatId(),
             'unit' => Billingo::getInstance()->getSettings()->unitType
         ];
 
@@ -190,7 +211,7 @@ class PayloadService extends Component
                 'item_comment' => (string) $adjustment->description,
                 'qty' => (float) 1.0,
                 'net_unit_price' => $adjustment->amount,
-                'vat_id' => $this->determineVatId(),
+                'vat_id' => self::determineVatId(),
                 'unit' => Billingo::getInstance()->getSettings()->unitType,
             ];
         }
@@ -201,7 +222,7 @@ class PayloadService extends Component
                 'item_comment' => (string) $adjustment->description,
                 'qty' => (float) 1.0,
                 'net_unit_price' => $adjustment->amount,
-                'vat_id' => $this->determineVatId(),
+                'vat_id' => self::determineVatId(),
                 'unit' => Billingo::getInstance()->getSettings()->unitType,
             ];
         }
@@ -209,7 +230,7 @@ class PayloadService extends Component
         return $adjustments;
     }
 
-    public function determineVatId($rateAsPercent = null)
+    public static function determineVatId($rateAsPercent = null)
     {
         /**
          * Get Billingo setting for default VAT. In worst case we will return this.
