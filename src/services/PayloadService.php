@@ -39,7 +39,7 @@ class PayloadService extends Component
      * @return array
      * @throws \yii\base\ErrorException
      */
-    public function createClientData($order)
+    public function createClientData(Order $order)
     {
         Craft::info(
             'Creating Client data started.',
@@ -63,8 +63,7 @@ class PayloadService extends Component
                 "door" => '',
                 "city" => $order->billingAddress->city,
                 "postcode" => $order->billingAddress->zipCode,
-                // TODO: wait for reply from Billingo
-                "country" => $order->billingAddress->countryText,
+                "country" => CountryService::getCountryNameByCode($order->billingAddress->countryIso),
                 "district" => ''
             ]
         ];
