@@ -12,6 +12,7 @@ namespace webmenedzser\billingo\services;
 
 use webmenedzser\billingo\Billingo;
 use webmenedzser\billingo\events\AfterInvoiceDataCreated;
+use webmenedzser\billingo\events\BeforeLineItemAdded;
 use webmenedzser\billingo\models\Settings;
 
 use Craft;
@@ -30,6 +31,7 @@ class PayloadService extends Component
     private $clientData;
     private $invoiceData;
 
+    public const EVENT_BEFORE_LINE_ITEM_ADDED = 'onBeforeLineItemAdded';
     public const EVENT_AFTER_INVOICE_DATA_CREATED = 'onAfterInvoiceDataCreated';
 
     /**
@@ -157,15 +159,21 @@ class PayloadService extends Component
 
         foreach ($order->lineItems as $lineItem) {
             $rateAsPercent = $lineItem->taxCategory->taxRates[0]->rateAsPercent;
+            $event = new BeforeLineItemAdded([
+                'lineItem' => $lineItem
+            ]);
+            $this->trigger(self::EVENT_BEFORE_LINE_ITEM_ADDED, $event);
 
-            $items[] = [
-                'description' => (string) $lineItem->description,
-                'qty' => (float) $lineItem->qty,
-                'net_unit_price' => $lineItem->salePrice ? (float) $lineItem->salePrice : (float) $lineItem->price,
-                'vat_id' => self::determineVatId($rateAsPercent),
-                'unit' => Billingo::getInstance()->getSettings()->unitType,
-                'item_comment' => (string) $lineItem->sku
-            ];
+            if ($event->isValid) {
+                $items[] = [
+                    'description' => (string) $lineItem->description,
+                    'qty' => (float) $lineItem->qty,
+                    'net_unit_price' => $lineItem->salePrice ? (float) $lineItem->salePrice : (float) $lineItem->price,
+                    'vat_id' => self::determineVatId($rateAsPercent),
+                    'unit' => Billingo::getInstance()->getSettings()->unitType,
+                    'item_comment' => (string) $lineItem->sku
+                ];
+            };
         }
 
         return $items;
