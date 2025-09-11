@@ -91,6 +91,9 @@ class BillingoService extends Component
          * Prepare Invoice data to send.
          */
         $this->invoice = $this->payloadService->createInvoiceData($this->order, $this->response['client']['id'], $refundAmount);
+        if (!$this->invoice) {
+            return;
+        }
 
         /**
          * Send Invoice data to Billingo API.

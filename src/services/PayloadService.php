@@ -88,12 +88,19 @@ class PayloadService extends Component
     {
         $lineItems = $this->createItemsArray($order);
         $adjustments = $this->createShippingAndDiscountAdjustmentItems($order);
-
         $items = array_merge($lineItems, $adjustments);
 
         if ($refundAmount) {
             $refundItem = $this->createRefundItem($refundAmount);
             $items = array_merge($items, $refundItem);
+        }
+        if (!count($items)) {
+            Craft::info(
+                'There are no lineItems for this invoice.',
+                __METHOD__
+            );
+
+            return null;
         }
 
         Craft::info(
