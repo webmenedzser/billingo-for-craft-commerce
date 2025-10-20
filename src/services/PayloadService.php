@@ -222,7 +222,7 @@ class PayloadService extends Component
 
         foreach ($discountAdjustments as $adjustment) {
             $adjustments[] = [
-                'description' => (string) Craft::t('billingo', 'Discount: ') . $adjustment->name,
+                'description' => (string) $adjustment->name,
                 'item_comment' => (string) $adjustment->description,
                 'qty' => (float) 1.0,
                 'net_unit_price' => $adjustment->amount,
@@ -233,7 +233,7 @@ class PayloadService extends Component
 
         foreach ($shippingAdjustments as $adjustment) {
             $adjustments[] = [
-                'description' => (string) Craft::t('billingo', 'Shipping: ') . $adjustment->name,
+                'description' => (string) $adjustment->name,
                 'item_comment' => (string) $adjustment->description,
                 'qty' => (float) 1.0,
                 'net_unit_price' => $adjustment->amount,
