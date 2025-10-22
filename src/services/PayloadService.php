@@ -12,6 +12,7 @@ namespace webmenedzser\billingo\services;
 
 use webmenedzser\billingo\Billingo;
 use webmenedzser\billingo\events\AfterInvoiceDataCreated;
+use webmenedzser\billingo\events\BeforeAdjustmentAdded;
 use webmenedzser\billingo\events\BeforeLineItemAdded;
 use webmenedzser\billingo\models\Settings;
 
@@ -32,6 +33,7 @@ class PayloadService extends Component
     private $invoiceData;
 
     public const EVENT_BEFORE_LINE_ITEM_ADDED = 'onBeforeLineItemAdded';
+    public const EVENT_BEFORE_ADJUSTMENT_ADDED = 'onBeforeAdjustmentAdded';
     public const EVENT_AFTER_INVOICE_DATA_CREATED = 'onAfterInvoiceDataCreated';
 
     /**
@@ -221,25 +223,39 @@ class PayloadService extends Component
         $shippingAdjustments = $order->getAdjustmentsByType('shipping');
 
         foreach ($discountAdjustments as $adjustment) {
-            $adjustments[] = [
-                'description' => (string) $adjustment->name,
-                'item_comment' => (string) $adjustment->description,
-                'qty' => (float) 1.0,
-                'net_unit_price' => $adjustment->amount,
-                'vat_id' => self::determineVatId(),
-                'unit' => Billingo::getInstance()->getSettings()->unitType,
-            ];
+            $event = new BeforeAdjustmentAdded([
+                'adjustment' => [
+                    'description' => (string) $adjustment->name,
+                    'item_comment' => (string) $adjustment->description,
+                    'qty' => (float) 1.0,
+                    'net_unit_price' => $adjustment->amount,
+                    'vat_id' => self::determineVatId(),
+                    'unit' => Billingo::getInstance()->getSettings()->unitType,
+                ]
+            ]);
+            $this->trigger(self::EVENT_BEFORE_ADJUSTMENT_ADDED, $event);
+
+            if ($event->isValid) {
+                $adjustments[] = $event->adjustment;
+            }
         }
 
         foreach ($shippingAdjustments as $adjustment) {
-            $adjustments[] = [
-                'description' => (string) $adjustment->name,
-                'item_comment' => (string) $adjustment->description,
-                'qty' => (float) 1.0,
-                'net_unit_price' => $adjustment->amount,
-                'vat_id' => self::determineVatId(),
-                'unit' => Billingo::getInstance()->getSettings()->unitType,
-            ];
+            $event = new BeforeAdjustmentAdded([
+                'adjustment' => [
+                    'description' => (string) $adjustment->name,
+                    'item_comment' => (string) $adjustment->description,
+                    'qty' => (float) 1.0,
+                    'net_unit_price' => $adjustment->amount,
+                    'vat_id' => self::determineVatId(),
+                    'unit' => Billingo::getInstance()->getSettings()->unitType,
+                ]
+            ]);
+            $this->trigger(self::EVENT_BEFORE_ADJUSTMENT_ADDED, $event);
+
+            if ($event->isValid) {
+                $adjustments[] = $event->adjustment;
+            }
         }
 
         return $adjustments;
